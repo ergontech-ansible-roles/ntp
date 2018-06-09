@@ -1,0 +1,8 @@
+---
+
+- name: restart timedatectl
+  become: yes
+  systemd:
+    name: systemd-timesyncd
+    state: restarted
+    daemon_reload: yes

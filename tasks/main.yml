@@ -24,18 +24,16 @@
   tags:
     - ntp
 
+- name: Check if ntp is enabled
+  become: yes
+  command: timedatectl
+  register: time_info
+  changed_when: false
+
 - name: Enable timedatectl ntp
   become: yes
   command: timedatectl set-ntp true
-  when: ntp
-  tags:
-    - ntp
-
-- name: Ensure timedatectl is running
-  become: yes
-  systemd:
-    name: systemd-timesyncd
-    state: started
-    daemon_reload: yes
+  when: "ntp and time_info.stdout.find('Network time on: yes') == -1"
+  notify: restart timedatectl
   tags:
     - ntp
