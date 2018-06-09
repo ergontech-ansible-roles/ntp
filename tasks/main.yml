@@ -1,2 +1,41 @@
 ---
 
+- name: Remove ntp
+  become: yes
+  package:
+    name: ntp
+    state: absent
+    purge: true
+  tags:
+    - ntp
+
+- name: Set timezone
+  become: yes
+  timezone:
+    name: "{{ ntp_timezone }}"
+  tags:
+    - ntp
+
+- name: Create config file
+  become: yes
+  template:
+    src: templates/timesyncd.conf.j2
+    dest: /etc/systemd/timesyncd.conf
+  tags:
+    - ntp
+
+- name: Enable timedatectl ntp
+  become: yes
+  command: timedatectl set-ntp true
+  when: ntp
+  tags:
+    - ntp
+
+- name: Ensure timedatectl is running
+  become: yes
+  systemd:
+    name: systemd-timesyncd
+    state: started
+    daemon_reload: yes
+  tags:
+    - ntp

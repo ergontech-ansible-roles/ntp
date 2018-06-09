@@ -6,7 +6,16 @@ Role Variables
 --------------
 
 ```
-# Any Vars?
+ntp: true
+
+ntp_timezone: 'America/Los_Angeles'
+
+ntp_pools:
+  - 0.us.pool.ntp.org
+  - 1.us.pool.ntp.org
+  - 2.us.pool.ntp.org
+  - 3.us.pool.ntp.org
+
 ```
 
 ----------------
